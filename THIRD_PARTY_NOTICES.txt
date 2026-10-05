@@ -1,0 +1,282 @@
+================================================================================
+THIRD-PARTY NOTICES — ML-KEM-768
+================================================================================
+
+This project's own code is MIT licensed; see LICENSE. THIS FILE COVERS CODE THIS
+PROJECT DID NOT WRITE. That code is not covered by LICENSE and carries its own
+terms, which are reproduced in full below.
+
+This inventory was built BY WALKING THE REPOSITORY AND READING THE LICENCE
+HEADER IN EVERY VENDORED FILE — not from a summary list. The licence set is NOT
+uniform: three distinct upstream authors with three distinct sets of terms, one
+of which imposes conditions on binary distribution.
+
+--------------------------------------------------------------------------------
+WHICH NOTICES THIS PACKAGE REQUIRES, AND WHY
+--------------------------------------------------------------------------------
+
+The distributed package contains the COMPILED STATIC LIBRARY (libmlkem768.a),
+the public header, README, LICENSE and this file. It does NOT ship source code.
+
+Verified by inspecting the built archive rather than assumed. `ar t` on
+libmlkem768.a lists these objects derived from third-party source:
+
+    fips202.o                           <- pq-crystals
+    fips202x4.avx2.o                    <- pq-crystals
+    KeccakP-1600-times4-SIMD256.avx2.o  <- Keccak/Keyak/Ketje Teams,
+                                           and it #includes KeccakP-brg_endian.h
+                                           (Brian Gladman)
+
+So sections 1, 2 and 3 below all apply to this binary package.
+
+`nm` on the same archive reports ZERO symbols from doctest or nlohmann/json.
+Those two are test-only, are never linked into the library, and are not shipped
+here — so their notices are not required by this package. They are recorded in
+section 4 anyway, because a SOURCE distribution of this repository would ship
+them and would then need them.
+
+    IF YOU REDISTRIBUTE A SOURCE TARBALL OF THIS REPOSITORY, section 4 applies
+    too, and the Gladman terms switch from condition 2 to condition 1.
+
+================================================================================
+1. pq-crystals / Kyber — FIPS 202 (Keccak, SHA-3, SHAKE)
+================================================================================
+
+Files in this repository:
+    third_party/fips202/fips202.c
+    third_party/fips202/fips202.h
+    third_party/fips202/fips202x4.c
+    third_party/fips202/fips202x4.h
+
+Upstream: https://github.com/pq-crystals/kyber
+Commit:   3edd5af5991927164edd4aacebfcbee00b8064e7
+Terms:    Public domain / CC0 1.0 Universal, ELECTED from a dual licence.
+
+The upstream top-level LICENSE at that commit reads, verbatim and in full:
+
+    Public Domain (https://creativecommons.org/share-your-work/public-domain/cc0/);
+    or Apache 2.0 License (https://www.apache.org/licenses/LICENSE-2.0.html).
+
+    For Keccak and AES we are using public-domain
+    code from sources and by authors listed in
+    comments on top of the respective files.
+
+That is a dual licence at the recipient's option. THIS PROJECT ELECTS THE PUBLIC
+DOMAIN / CC0 OPTION, which is why no Apache-2.0 licence copy accompanies this
+package. Had Apache 2.0 been elected, its section 4 would have required shipping a
+copy of that licence and retaining its notices.
+
+The election also settles fips202x4.c and fips202x4.h, which are pq-crystals' own
+4-way wrapper code rather than vendored Keccak, and so are not covered by the
+"For Keccak and AES" sentence above. Under the election they are public domain.
+
+CC0 is a waiver of copyright, not a reciprocal licence: it imposes no condition on
+redistribution in source or binary form. Full text of the dedication:
+https://creativecommons.org/publicdomain/zero/1.0/
+
+Verbatim notice from the top of fips202.c:
+
+    /* Based on the public domain implementation in crypto_hash/keccakc512/simple/ from
+     * http://bench.cr.yp.to/supercop.html by Ronny Van Keer and the public domain "TweetFips202"
+     * implementation from https://twitter.com/tweetfips202 by Gilles Van Assche, Daniel J. Bernstein,
+     * and Peter Schwabe */
+
+The named authors of the public-domain originals are therefore Ronny Van Keer,
+Gilles Van Assche, Daniel J. Bernstein and Peter Schwabe.
+
+fips202.h, fips202x4.c and fips202x4.h carry no licence header of their own.
+Their provenance is the pq-crystals repository at the commit above, and their
+terms are the upstream top-level LICENCE quoted earlier in this section under the
+public-domain election.
+
+================================================================================
+2. The Keccak, Keyak and Ketje Teams — KeccakP-1600 times4 AVX2 permutation
+================================================================================
+
+Files in this repository:
+    third_party/fips202/keccak4x/KeccakP-1600-times4-SIMD256.c
+    third_party/fips202/keccak4x/KeccakP-1600-times4-SnP.h
+    third_party/fips202/keccak4x/KeccakP-1600-unrolling.macros
+    third_party/fips202/keccak4x/KeccakP-align.h
+    third_party/fips202/keccak4x/KeccakP-SIMD256-config.h   (see the note below)
+
+Upstream: vendored via https://github.com/pq-crystals/kyber (avx2/keccak4x/),
+          originating from the Keccak Code Package.
+Commit:   3edd5af5991927164edd4aacebfcbee00b8064e7
+Terms:    CC0 1.0 Universal waiver. No conditions.
+
+Verbatim notice, identical at the top of each of the first four files:
+
+    /*
+    Implementation by the Keccak, Keyak and Ketje Teams, namely, Guido Bertoni,
+    Joan Daemen, Michaël Peeters, Gilles Van Assche and Ronny Van Keer, hereby
+    denoted as "the implementer".
+
+    For more information, feedback or questions, please refer to our websites:
+    http://keccak.noekeon.org/
+    http://keyak.noekeon.org/
+    http://ketje.noekeon.org/
+
+    To the extent possible under law, the implementer has waived all copyright
+    and related or neighboring rights to the source code in this file.
+    http://creativecommons.org/publicdomain/zero/1.0/
+    */
+
+NOTE ON KeccakP-SIMD256-config.h — it carries NO licence header of its own; its
+entire content is three preprocessor definitions:
+
+    #define KeccakP1600times4_implementation_config "AVX2, all rounds unrolled"
+    #define KeccakP1600times4_fullUnrolling
+    #define KeccakP1600times4_useAVX2
+
+ITS TERMS ARE CITED TO THE UPSTREAM REPOSITORY'S TOP-LEVEL LICENCE at the pinned
+commit — quoted in full in section 1 above — and NOT inferred from the licence
+headers of neighbouring files. Inferring from siblings would be a guess about
+authorship; the upstream licence is an actual authority covering the file. Under
+the public-domain election recorded in section 1, this file is public domain.
+
+The four sibling files listed above do state the Keccak Teams' CC0 waiver in their
+own headers and need no such fallback.
+
+IMPORTANT: the upstream blanket statement does NOT override a file that states its
+own licence. KeccakP-brg_endian.h sits in this same vendored directory and carries
+BSD-style terms with three conditions in its own header. Those govern — see
+section 3.
+
+Full text of the waiver: https://creativecommons.org/publicdomain/zero/1.0/
+
+================================================================================
+3. Brian Gladman — byte-order detection header
+================================================================================
+
+    *** THIS IS THE ONE COMPONENT WITH CONDITIONS. IT IS NOT PUBLIC DOMAIN. ***
+
+File in this repository:
+    third_party/fips202/keccak4x/KeccakP-brg_endian.h
+
+Upstream: vendored via https://github.com/pq-crystals/kyber (avx2/keccak4x/)
+Commit:   3edd5af5991927164edd4aacebfcbee00b8064e7
+Terms:    BSD-style, three conditions, reproduced verbatim and in full below.
+
+This header is #included by KeccakP-1600-times4-SIMD256.c, which is compiled
+into libmlkem768.a. **CONDITION 2 THEREFORE APPLIES TO THIS PACKAGE**: a binary
+distribution must include this copyright notice, the list of conditions and the
+disclaimer in its documentation. That is what this section is for, and it is why
+this file must accompany the package rather than being optional.
+
+Verbatim, complete:
+
+     ---------------------------------------------------------------------------
+     Copyright (c) 1998-2008, Brian Gladman, Worcester, UK. All rights reserved.
+
+     LICENSE TERMS
+
+     The redistribution and use of this software (with or without changes)
+     is allowed without the payment of fees or royalties provided that:
+
+      1. source code distributions include the above copyright notice, this
+         list of conditions and the following disclaimer;
+
+      2. binary distributions include the above copyright notice, this list
+         of conditions and the following disclaimer in their documentation;
+
+      3. the name of the copyright holder is not used to endorse products
+         built using this software without specific written permission.
+
+     DISCLAIMER
+
+     This software is provided 'as is' with no explicit or implied warranties
+     in respect of its properties, including, but not limited to, correctness
+     and/or fitness for purpose.
+     ---------------------------------------------------------------------------
+     Issue Date: 20/12/2007
+     Changes for ARM 9/9/2010
+
+On condition 3: neither Brian Gladman's name nor the names of any other
+third-party author above are used to endorse or promote this project.
+
+================================================================================
+4. Test-only dependencies — NOT in this binary package
+================================================================================
+
+Neither of these is linked into libmlkem768.a; `nm` on the shipped archive
+reports zero symbols from either. They are listed because they are part of the
+repository, and a SOURCE distribution would ship them and require these notices.
+
+--------------------------------------------------------------------------------
+4a. doctest — unit test framework
+--------------------------------------------------------------------------------
+
+File:     third_party/doctest/doctest.h
+Upstream: https://github.com/doctest/doctest (v2.5.3)
+Commit:   2d0a9359a60c51affe2a9bebb1be1dca47868151
+Terms:    MIT. Copyright (c) 2016-2023 Viktor Kirilov.
+
+    MIT License
+
+    Copyright (c) 2016-2023 Viktor Kirilov
+
+    Permission is hereby granted, free of charge, to any person obtaining a copy
+    of this software and associated documentation files (the "Software"), to deal
+    in the Software without restriction, including without limitation the rights
+    to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+    copies of the Software, and to permit persons to whom the Software is
+    furnished to do so, subject to the following conditions:
+
+    The above copyright notice and this permission notice shall be included in
+    all copies or substantial portions of the Software.
+
+    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+    IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+    FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+    AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+    LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+    FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+    DEALINGS IN THE SOFTWARE.
+
+--------------------------------------------------------------------------------
+4b. nlohmann/json — JSON parser, used to read the NIST test vectors
+--------------------------------------------------------------------------------
+
+File:     third_party/nlohmann/json.hpp
+Upstream: https://github.com/nlohmann/json (v3.12.0)
+Commit:   55f93686c01528224f448c19128836e7df245f72
+Terms:    MIT. SPDX-License-Identifier: MIT.
+          SPDX-FileCopyrightText: 2013 - 2025 Niels Lohmann <https://nlohmann.me>
+
+    MIT License
+
+    Copyright (c) 2013-2025 Niels Lohmann
+
+    Permission is hereby granted, free of charge, to any person obtaining a copy
+    of this software and associated documentation files (the "Software"), to deal
+    in the Software without restriction, including without limitation the rights
+    to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+    copies of the Software, and to permit persons to whom the Software is
+    furnished to do so, subject to the following conditions:
+
+    The above copyright notice and this permission notice shall be included in
+    all copies or substantial portions of the Software.
+
+    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+    IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+    FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+    AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+    LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+    FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+    DEALINGS IN THE SOFTWARE.
+
+================================================================================
+NOT VENDORED
+================================================================================
+
+pq-crystals/kyber is also used as a BENCHMARK COMPARISON, built entirely outside
+this repository. None of its optimized ML-KEM code is copied into this project or
+into any distributed artifact; only the FIPS 202 files in section 1 are vendored.
+The comparison build is not part of any package.
+
+The NIST ACVP test vectors under tests/kat/vectors/ are US Government work
+products, not third-party licensed code. Their provenance, source URLs and
+checksums are recorded in tests/kat/PROVENANCE.md.
+
+================================================================================

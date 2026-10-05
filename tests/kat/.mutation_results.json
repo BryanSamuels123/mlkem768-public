@@ -1,0 +1,146 @@
+[
+  {
+    "id": "M1",
+    "title": "Drop the domain separator in G(d || k)",
+    "ref": "Alg. 13 line 1 / failure mode #1",
+    "file": "src/kpke.cpp",
+    "verdict": "FAIL",
+    "total_pass": 55,
+    "per_group": {
+      "keyGen": 25,
+      "encapsulation": 0,
+      "decapsulation": 0,
+      "encapsulationKeyCheck": 0,
+      "decapsulationKeyCheck": 0
+    },
+    "note": "detected"
+  },
+  {
+    "id": "M2",
+    "title": "Swap i and j in the SampleNTT seed",
+    "ref": "Alg. 13 line 5 / failure mode #3",
+    "file": "src/kpke.cpp",
+    "verdict": "FAIL",
+    "total_pass": 25,
+    "per_group": {
+      "keyGen": 25,
+      "encapsulation": 25,
+      "decapsulation": 5,
+      "encapsulationKeyCheck": 0,
+      "decapsulationKeyCheck": 0
+    },
+    "note": "detected"
+  },
+  {
+    "id": "M3",
+    "title": "invntt final scale 3303 -> 3302",
+    "ref": "Alg. 10 line 14 / failure mode #6",
+    "file": "src/ntt.cpp",
+    "verdict": "FAIL",
+    "total_pass": 50,
+    "per_group": {
+      "keyGen": 0,
+      "encapsulation": 25,
+      "decapsulation": 5,
+      "encapsulationKeyCheck": 0,
+      "decapsulationKeyCheck": 0
+    },
+    "note": "detected"
+  },
+  {
+    "id": "M4",
+    "title": "Remove the transpose in u = NTT^-1(A^T o y_hat)",
+    "ref": "Alg. 14 line 19 / #4",
+    "file": "src/kpke.cpp",
+    "verdict": "FAIL",
+    "total_pass": 50,
+    "per_group": {
+      "keyGen": 0,
+      "encapsulation": 25,
+      "decapsulation": 5,
+      "encapsulationKeyCheck": 0,
+      "decapsulationKeyCheck": 0
+    },
+    "note": "detected"
+  },
+  {
+    "id": "M5",
+    "title": "Swap the N counter order in Encrypt",
+    "ref": "Alg. 14 lines 9-16 / #5",
+    "file": "src/kpke.cpp",
+    "verdict": "FAIL",
+    "total_pass": 50,
+    "per_group": {
+      "keyGen": 0,
+      "encapsulation": 25,
+      "decapsulation": 5,
+      "encapsulationKeyCheck": 0,
+      "decapsulationKeyCheck": 0
+    },
+    "note": "detected"
+  },
+  {
+    "id": "M6",
+    "title": "Skip the implicit-rejection select",
+    "ref": "Alg. 18 lines 9-11 / #10",
+    "file": "src/kem.cpp",
+    "verdict": "FAIL",
+    "total_pass": 75,
+    "per_group": {
+      "keyGen": 0,
+      "encapsulation": 0,
+      "decapsulation": 5,
+      "encapsulationKeyCheck": 0,
+      "decapsulationKeyCheck": 0
+    },
+    "note": "detected"
+  },
+  {
+    "id": "M7",
+    "title": "Off-by-one in Compress_du rounding",
+    "ref": "(4.7) / failure mode #9",
+    "file": "src/poly.cpp",
+    "verdict": "FAIL",
+    "total_pass": 72,
+    "per_group": {
+      "keyGen": 0,
+      "encapsulation": 7,
+      "decapsulation": 1,
+      "encapsulationKeyCheck": 0,
+      "decapsulationKeyCheck": 0
+    },
+    "note": "detected"
+  },
+  {
+    "id": "M8",
+    "title": "Encapsulation key check always passes",
+    "ref": "\u00a77.2 (7.1)",
+    "file": "src/kem.cpp",
+    "verdict": "FAIL",
+    "total_pass": 75,
+    "per_group": {
+      "keyGen": 0,
+      "encapsulation": 0,
+      "decapsulation": 0,
+      "encapsulationKeyCheck": 5,
+      "decapsulationKeyCheck": 0
+    },
+    "note": "detected"
+  },
+  {
+    "id": "M9",
+    "title": "Decapsulation key check always passes",
+    "ref": "\u00a77.3 (7.2)",
+    "file": "src/kem.cpp",
+    "verdict": "FAIL",
+    "total_pass": 75,
+    "per_group": {
+      "keyGen": 0,
+      "encapsulation": 0,
+      "decapsulation": 0,
+      "encapsulationKeyCheck": 0,
+      "decapsulationKeyCheck": 5
+    },
+    "note": "detected"
+  }
+]

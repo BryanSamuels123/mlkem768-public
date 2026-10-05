@@ -1,0 +1,51 @@
+# MSan image: base CI image + an MSan-instrumented libc++.
+#
+# WHY THIS EXISTS. MemorySanitizer reports a false positive for every read of memory
+# written by code it did not instrument. The C++ standard library is exactly that, so
+# `-fsanitize=memory` against stock libstdc++ reports use-of-uninitialized-value inside
+# std::_Rb_tree the moment doctest registers a test case. Observed, not theorised:
+# that is precisely what `make docker-msan` did before this image existed.
+#
+# The documented fix is to build the standard library with MSan too. This image does
+# that once, at image-build time, so the gate is a real signal instead of noise.
+#
+# Separate from the base image because the libc++ build is slow and only MSan needs it.
+
+FROM mlkem768-ci:bookworm
+
+ENV DEBIAN_FRONTEND=noninteractive
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+      cmake ninja-build git python3 \
+    && rm -rf /var/lib/apt/lists/*
+
+# Match the runtime version to the compiler: Debian bookworm ships clang 16.0.6.
+ARG LLVM_TAG=llvmorg-16.0.6
+
+# Sparse checkout — a full llvm-project clone is gigabytes and we need four directories.
+RUN git clone --depth 1 --branch ${LLVM_TAG} --filter=blob:none --sparse \
+        https://github.com/llvm/llvm-project.git /tmp/llvm-project \
+ && cd /tmp/llvm-project \
+ && git sparse-checkout set runtimes libcxx libcxxabi libunwind cmake llvm/cmake llvm/utils third-party
+
+RUN cmake -G Ninja -S /tmp/llvm-project/runtimes -B /tmp/build-msan \
+      -DCMAKE_BUILD_TYPE=Release \
+      -DCMAKE_C_COMPILER=clang-16 \
+      -DCMAKE_CXX_COMPILER=clang++-16 \
+      -DLLVM_ENABLE_RUNTIMES="libcxx;libcxxabi;libunwind" \
+      -DLLVM_USE_SANITIZER=MemoryWithOrigins \
+      -DLIBCXX_ENABLE_SHARED=ON \
+      -DLIBCXXABI_ENABLE_SHARED=ON \
+      -DLIBCXX_ENABLE_STATIC=OFF \
+      -DLIBCXXABI_ENABLE_STATIC=OFF \
+      -DLLVM_INCLUDE_TESTS=OFF \
+      -DLIBCXX_INCLUDE_TESTS=OFF \
+      -DLIBCXX_INCLUDE_BENCHMARKS=OFF \
+      -DLLVM_CMAKE_DIR=/tmp/llvm-project/llvm/cmake/modules \
+      -DCMAKE_INSTALL_PREFIX=/opt/libcxx-msan \
+ && ninja -C /tmp/build-msan cxx cxxabi unwind \
+ && ninja -C /tmp/build-msan install-cxx install-cxxabi install-unwind \
+ && rm -rf /tmp/llvm-project /tmp/build-msan
+
+ENV MSAN_LIBCXX=/opt/libcxx-msan
+WORKDIR /work

@@ -1,0 +1,41 @@
+# Build artifacts
+build/
+*.o
+*.a
+*.d
+*.dSYM/
+*.so
+*.dylib
+
+# Test/bench output
+*.log
+perf.data*
+callgrind.out.*
+cachegrind.out.*
+massif.out.*
+
+# Packaging
+*.tar.gz
+dist/
+
+# Editors / OS
+.DS_Store
+.vscode/
+.idea/
+compile_commands.json
+.cache/
+
+# Scratch. Extracted text from reference documents lives in /tmp, never in the repo.
+scratch/
+
+# Docker build logs
+*.build.log
+
+# Local-only git hooks. Deliberately NOT version-controlled: enable on a new
+# machine with `git config core.hooksPath .githooks` after recreating them.
+# They were only a local convenience, never a dependency of any gate.
+.githooks/
+
+# Python bytecode from tools/ and tests/ helper scripts
+__pycache__/
+*.pyc
